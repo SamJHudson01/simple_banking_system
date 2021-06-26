@@ -9,13 +9,23 @@ def start_program():
 
 class CreditCard:
 
-    def __init__(self) -> object:
-        self.card_no = '400000'
+    def __init__(self):
+        self.card_no = [4, 0, 0, 0, 0, 0] + random.sample([0, 1, 2, 3, 4, 5, 6, 7, 8, 9], 9)
+        luhn_card = self.card_no.copy()
         self.pin = ''
-        for _ in range(9):
-            digit = random.randint(0, 9)
-            self.card_no += str(digit)
-        self.card_no += str(random.randint(0, 9))
+        for index, value in enumerate(luhn_card):
+            if index % 2 == 0:
+                luhn_card[index] = value * 2
+        for index, value in enumerate(luhn_card):
+            if value > 9:
+                luhn_card[index] = value - 9
+        luhn_digit = 0
+        if sum(luhn_card) % 10 != 0:
+            luhn_digit = 10 - sum(luhn_card) % 10
+        self.card_no.append(luhn_digit)
+        self.card_no = ''.join([str(elem) for elem in self.card_no])
+
+
         for _ in range(4):
             pin_digit = random.randint(0, 9)
             self.pin += str(pin_digit)
@@ -55,7 +65,6 @@ while True:
                     print('Bye!')
                     customer_selection = 0
                     break
-                # need an if statement here for checking balance, logging out and exiting the program
             else:
                 print('Wrong card number or PIN!')
     if customer_selection == 0:
